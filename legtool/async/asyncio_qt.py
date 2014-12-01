@@ -115,7 +115,9 @@ class QtEventLoop(asyncio.AbstractEventLoop):
 
     def call_later(self, delay, callback, *args):
         result = asyncio.Handle(callback, args, self)
-        QtCore.QTimer.singleShot(int(delay * 1000.0), lambda: result._run())
+        QtCore.QTimer.singleShot(
+            int(delay * 1000.0),
+            lambda: result._run() if not result._cancelled else None)
         return result
 
     def call_at(self, when, callback, *args):
